@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCollider : MonoBehaviour
@@ -9,7 +10,12 @@ public class PlayerCollider : MonoBehaviour
     [SerializeField]
     private GameLogic gameLogic;
 
+    private float lastUpdate;
 
+    private void Start()
+    {
+        lastUpdate = 0.0f;
+    }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -31,13 +37,35 @@ public class PlayerCollider : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Arrow" ||
+            collision.gameObject.tag == "Swarm" ||
+            collision.gameObject.tag == "Pirate")
+        {
+            lastUpdate += Time.deltaTime;
+            if (lastUpdate > 2.0)
+            {
+                gameLogic.EnemyContact(collision.gameObject.tag);
+                lastUpdate = 0.0f;
+            }
+
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Arrow" ||
             collision.gameObject.tag == "Swarm" ||
             collision.gameObject.tag == "Pirate")
         {
-            gameLogic.EnemyContact(collision.gameObject.tag);
+            lastUpdate += Time.deltaTime;
+            if (lastUpdate > 2.0)
+            {
+                gameLogic.EnemyContact(collision.gameObject.tag);
+                lastUpdate = 0.0f;
+            }
+            
         }
 
 
