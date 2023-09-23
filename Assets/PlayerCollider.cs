@@ -14,7 +14,7 @@ public class PlayerCollider : MonoBehaviour
 
     private void Start()
     {
-        lastUpdate = 0.0f;
+        lastUpdate = 3.0f;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
