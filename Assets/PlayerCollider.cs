@@ -52,7 +52,6 @@ public class PlayerCollider : MonoBehaviour
             collision.gameObject.tag == "Swarm" ||
             collision.gameObject.tag == "Pirate")
         {
-            Debug.Log("Help");
             if (lastUpdate > checkUpdate)
             {
                 gameLogic.EnemyContact(collision.gameObject.tag);
