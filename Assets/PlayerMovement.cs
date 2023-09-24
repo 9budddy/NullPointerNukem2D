@@ -22,16 +22,28 @@ public class PlayerScript : MonoBehaviour
     Vector3 movement;
 
     private float lastUpdate;
-    [SerializeField]private float checkUpdate = 5.0f;
-    private bool spawnedText = false;
+    [SerializeField] private float checkUpdate = 5.0f;
+    [SerializeField] private Canvas doItLaterCanvas;
     [SerializeField] private TextMeshProUGUI doItLaterText;
+    [SerializeField] private GameObject backgroundObj;
+    [SerializeField] private GameObject iconObj;
+
+    private SpriteRenderer backgroundSpr;
+    private SpriteRenderer iconSpr;
+    private bool spawnedText = false;
     void Start()
     {
         lastUpdate = 0.0f;
-        playerState.stopMovement = false;
+
         rb = GetComponent<Rigidbody2D>();
+        backgroundSpr = backgroundObj.GetComponent<SpriteRenderer>();
+        iconSpr = iconObj.GetComponent<SpriteRenderer>();
+
+        playerState.stopMovement = false;
         playerState.alive = true;
         doItLaterText.enabled = false;
+        backgroundSpr.enabled = false;
+        iconSpr.enabled = false;
     }
 
     // Update is called once per frame
@@ -45,28 +57,45 @@ public class PlayerScript : MonoBehaviour
         }
         else if (playerState.alive && playerState.stopMovement)
         {
-            lastUpdate += Time.deltaTime;
-            
-            if (lastUpdate > checkUpdate && spawnedText)
-            {
-                lastUpdate = 0.0f;
-                spawnedText = false;
-                playerState.stopMovement = false;
-                doItLaterText.enabled = false;
-            } 
-            else if (lastUpdate < checkUpdate && !spawnedText)
-            {
-                spawnedText = true;
-                doItLaterText.enabled = true;
-                doItLaterText.SetText("I'll do it later.");
-                doItLaterText.alignment = TextAlignmentOptions.Center;
-                
-
-            }
-            lastUpdate += Time.deltaTime;
+            textBubble();
         }
         playerState.position = transform.position;
 
+    }
+
+    public void textBubble()
+    {
+        lastUpdate += Time.deltaTime;
+
+        if (lastUpdate > checkUpdate && spawnedText)
+        {
+            lastUpdate = 0.0f;
+            spawnedText = false;
+            playerState.stopMovement = false;
+            doItLaterText.enabled = false;
+            backgroundSpr.enabled = false;
+            iconSpr.enabled = false;
+        }
+        else if (lastUpdate < checkUpdate && !spawnedText)
+        {
+            if (transform.localScale.x == -1 )
+            {
+                doItLaterCanvas.transform.localScale = new Vector3(doItLaterCanvas.transform.localScale.x * -1, doItLaterCanvas.transform.localScale.y, doItLaterCanvas.transform.localScale.z);
+            } 
+            else
+            {
+                if (doItLaterCanvas.transform.localScale.x < 0)
+                {
+                    doItLaterCanvas.transform.localScale = new Vector3(doItLaterCanvas.transform.localScale.x * -1, doItLaterCanvas.transform.localScale.y, doItLaterCanvas.transform.localScale.z);
+                }
+            }
+
+            spawnedText = true;
+            doItLaterText.enabled = true;
+            backgroundSpr.enabled = true;
+            iconSpr.enabled = true;
+        }
+        lastUpdate += Time.deltaTime;
     }
 
 
