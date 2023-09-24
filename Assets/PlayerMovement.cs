@@ -24,13 +24,14 @@ public class PlayerScript : MonoBehaviour
     private float lastUpdate;
     [SerializeField]private float checkUpdate = 5.0f;
     private bool spawnedText = false;
-    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI doItLaterText;
     void Start()
     {
         lastUpdate = 0.0f;
         playerState.stopMovement = false;
         rb = GetComponent<Rigidbody2D>();
         playerState.alive = true;
+        doItLaterText.enabled = false;
     }
 
     // Update is called once per frame
@@ -51,15 +52,14 @@ public class PlayerScript : MonoBehaviour
                 lastUpdate = 0.0f;
                 spawnedText = false;
                 playerState.stopMovement = false;
-                text.enabled = false;
+                doItLaterText.enabled = false;
             } 
             else if (lastUpdate < checkUpdate && !spawnedText)
             {
                 spawnedText = true;
-                text.enabled = true;
-                text.rectTransform.localPosition = transform.localPosition + new Vector3(3f,3f);
-                text.SetText("I'll do it later.");
-                text.alignment = TextAlignmentOptions.Center;
+                doItLaterText.enabled = true;
+                doItLaterText.SetText("I'll do it later.");
+                doItLaterText.alignment = TextAlignmentOptions.Center;
                 
 
             }

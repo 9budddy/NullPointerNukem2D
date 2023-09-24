@@ -12,21 +12,31 @@ public class PlayerCollider : MonoBehaviour
     private GameLogic gameLogic;
 
 
-    private float lastUpdate;
-    private float checkUpdate = 1.5f;
+    private float lastArrowUpdate;
+    private float checkArrowUpdate = 1.5f;
+
+    private float lastSwarmUpdate;
+    private float checkSwarmUpdate = 1.5f;
+
+    private float lastPirateUpdate;
+    private float checkPirateUpdate = 1.5f;
 
     [SerializeField] private BoundaryScript bScript;
 
 
     private void Start()
     {
-        lastUpdate = 3.0f;
+        lastArrowUpdate = 3.0f;
+        lastSwarmUpdate = 3.0f;
+        lastPirateUpdate = 3.0f;
     }
 
     private void Update()
     {
         bScript.tryCamera(gameObject);
-        lastUpdate += Time.deltaTime;
+        lastArrowUpdate += Time.deltaTime;
+        lastSwarmUpdate += Time.deltaTime;
+        lastPirateUpdate += Time.deltaTime;
         
     }
 
@@ -36,37 +46,83 @@ public class PlayerCollider : MonoBehaviour
             collision.gameObject.tag == "Brownie" ||
             collision.gameObject.tag == "Pendant")
         {
-
             gameLogic.ItemContact(collision.gameObject.tag);
+            Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.tag == "GermanProfessor")
+        {
+            playerState.gotPowerUp = true;
+            gameLogic.HeroContact(collision.gameObject.tag);
+            Destroy(collision.gameObject);
+        }
+            
+        else if (collision.gameObject.tag == "EnglishEducator")
+        {
+            playerState.gotPowerUp = true;
+            gameLogic.HeroContact(collision.gameObject.tag);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.tag == "AmericanAmplifier")
+        {
+            playerState.gotPowerUp = true;
+            gameLogic.HeroContact(collision.gameObject.tag);
             Destroy(collision.gameObject);
         }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Arrow" ||
-            collision.gameObject.tag == "Swarm" ||
-            collision.gameObject.tag == "Pirate")
+        if (collision.gameObject.tag == "Arrow")
         {
-            if (lastUpdate > checkUpdate)
+            if (lastArrowUpdate > checkArrowUpdate)
             {
                 gameLogic.EnemyContact(collision.gameObject.tag);
-                lastUpdate = 0.0f;
+                lastArrowUpdate = 0.0f;
             }
-
+        }
+        else if (collision.gameObject.tag == "Swarm")
+        {
+            if (lastSwarmUpdate > checkSwarmUpdate)
+            {
+                gameLogic.EnemyContact(collision.gameObject.tag);
+                lastSwarmUpdate = 0.0f;
+            }
+        }
+        else if (collision.gameObject.tag == "Pirate")
+        {
+            if (lastPirateUpdate > checkPirateUpdate)
+            {
+                gameLogic.EnemyContact(collision.gameObject.tag);
+                lastPirateUpdate = 0.0f;
+            }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Arrow" ||
-            collision.gameObject.tag == "Swarm" ||
-            collision.gameObject.tag == "Pirate")
+        if (collision.gameObject.tag == "Arrow")
         {
-            if (lastUpdate > checkUpdate)
+            if (lastArrowUpdate > checkArrowUpdate)
             {
                 gameLogic.EnemyContact(collision.gameObject.tag);
-                lastUpdate = 0.0f;
+                lastArrowUpdate = 0.0f;
+            }
+        }
+        else if (collision.gameObject.tag == "Swarm")
+        {
+            if (lastSwarmUpdate > checkSwarmUpdate)
+            {
+                gameLogic.EnemyContact(collision.gameObject.tag);
+                lastSwarmUpdate = 0.0f;
+            }
+        }
+        else if (collision.gameObject.tag == "Pirate")
+        {
+            if (lastPirateUpdate > checkPirateUpdate)
+            {
+                gameLogic.EnemyContact(collision.gameObject.tag);
+                lastPirateUpdate = 0.0f;
             }
         }
     }

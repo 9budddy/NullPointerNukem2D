@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class ArrowCreation : MonoBehaviour
 {
-    public GameObject prefab;
-    
+    public GameObject arrow;
+    [SerializeField] private GameState gameState;
+
     IEnumerator CreateArrow(float waitTime)
     {
         while(true)
         {
             yield return new WaitForSeconds(waitTime);
             Vector2 pos = new Vector2(-5.5f, -1.5f);
-            Instantiate(prefab, pos, Quaternion.identity);
+            GameObject enemy = Instantiate(arrow, pos, Quaternion.identity);
+            gameState.enemyObjects.Add(enemy);
         }
 
     }
     void Start()
     {
-        //StartCoroutine(CreateArrow(5.0f));
+        StartCoroutine(CreateArrow(5.0f));
     }
 
     // Update is called once per frame
