@@ -11,6 +11,7 @@ public class PlayerCollider : MonoBehaviour
     [SerializeField]
     private GameLogic gameLogic;
 
+
     private float lastUpdate;
     private float checkUpdate = 1.5f;
 

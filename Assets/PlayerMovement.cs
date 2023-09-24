@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
@@ -9,7 +11,6 @@ public class PlayerScript : MonoBehaviour
     public float movePower = 10f;
 
     private Rigidbody2D rb;
-    
 
     [SerializeField]
     private PlayerState playerState;
@@ -19,23 +20,50 @@ public class PlayerScript : MonoBehaviour
 
     private int direction = 1;
     Vector3 movement;
-    private bool alive = true;
 
-    // Start is called before the first frame update
+    private float lastUpdate;
+    [SerializeField]private float checkUpdate = 5.0f;
+    private bool spawnedText = false;
+    [SerializeField] private TextMeshProUGUI text;
     void Start()
     {
+        lastUpdate = 0.0f;
+        playerState.stopMovement = false;
         rb = GetComponent<Rigidbody2D>();
-        
+        playerState.alive = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (alive)
+        
+        if (playerState.alive && !playerState.stopMovement)
         {
-            
             Horizontal();
             Vertical();
+        }
+        else if (playerState.alive && playerState.stopMovement)
+        {
+            lastUpdate += Time.deltaTime;
+            
+            if (lastUpdate > checkUpdate && spawnedText)
+            {
+                lastUpdate = 0.0f;
+                spawnedText = false;
+                playerState.stopMovement = false;
+                text.enabled = false;
+            } 
+            else if (lastUpdate < checkUpdate && !spawnedText)
+            {
+                spawnedText = true;
+                text.enabled = true;
+                text.rectTransform.localPosition = transform.localPosition + new Vector3(3f,3f);
+                text.SetText("I'll do it later.");
+                text.alignment = TextAlignmentOptions.Center;
+                
+
+            }
+            lastUpdate += Time.deltaTime;
         }
         playerState.position = transform.position;
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8908838468476819365}
   m_Layer: 7
   m_Name: GermanProfessor
-  m_TagString: GameController
+  m_TagString: GermanProfessor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

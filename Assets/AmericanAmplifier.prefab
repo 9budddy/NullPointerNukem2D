@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4411699201788128849}
   - component: {fileID: 2117748035674317859}
   m_Layer: 7
-  m_Name: AmericanAcademic
+  m_Name: AmericanAmplifier
   m_TagString: AmericanAmplifier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
