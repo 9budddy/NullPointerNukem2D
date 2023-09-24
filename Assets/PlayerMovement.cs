@@ -33,9 +33,11 @@ public class PlayerScript : MonoBehaviour
     {
         if (alive)
         {
+            
             Horizontal();
             Vertical();
         }
+        playerState.position = transform.position;
 
     }
 
@@ -43,14 +45,14 @@ public class PlayerScript : MonoBehaviour
     void Horizontal()
     {
 
-        if (Input.GetAxisRaw("Horizontal") < 0 && !playerState.leftColliding)
+        if (Input.GetAxisRaw("Horizontal") < 0)
         {
             direction = -1;
             movement += Vector3.left;
 
             transform.localScale = new Vector3(direction, 1, 1);
         }
-        else if (Input.GetAxisRaw("Horizontal") > 0 && !playerState.rightColliding)
+        else if (Input.GetAxisRaw("Horizontal") > 0)
         {
             direction = 1;
             movement += Vector3.right;
@@ -78,12 +80,12 @@ public class PlayerScript : MonoBehaviour
     void Vertical ()
     {
         movement = Vector3.zero;
-        if (Input.GetAxisRaw("Vertical") > 0 && !playerState.topColliding)
+        if (Input.GetAxisRaw("Vertical") > 0)
         {
             movement += Vector3.up;
 
         }
-        else if (Input.GetAxisRaw("Vertical") < 0 && !playerState.bottomColliding)
+        else if (Input.GetAxisRaw("Vertical") < 0)
         {
             movement += Vector3.down;
         }
