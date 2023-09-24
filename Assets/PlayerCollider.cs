@@ -29,7 +29,17 @@ public class PlayerCollider : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "CookBook" ||
+            collision.gameObject.tag == "Brownie" ||
+            collision.gameObject.tag == "Pendant")
+        {
 
+            gameLogic.ItemContact(collision.gameObject.tag);
+            Destroy(collision.gameObject);
+        }
+    }
 
     private void OnCollisionStay2D(Collision2D collision)
     {

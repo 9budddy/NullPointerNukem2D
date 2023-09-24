@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,5 +16,24 @@ public class GameLogic : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ItemContact(string tag)
+    {
+        if (tag == "CookBook")
+        {
+            gameState.knowledgePoints += 1;
+            return;
+        } 
+        else if (tag == "Pendant")
+        {
+            gameState.knowledgePoints += 25;
+            return;
+        } 
+        else if (tag == "Brownie")
+        {
+            gameState.browiePoints += 1;
+            return;
+        }
     }
 }

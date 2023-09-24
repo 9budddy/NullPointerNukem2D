@@ -8,14 +8,17 @@ public class ArrowCreation : MonoBehaviour
     
     IEnumerator CreateArrow(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime);
-        Vector2 pos = new Vector2(-5.5f, -1.5f);
-        Instantiate(prefab, pos, Quaternion.identity);
+        while(true)
+        {
+            yield return new WaitForSeconds(waitTime);
+            Vector2 pos = new Vector2(-5.5f, -1.5f);
+            Instantiate(prefab, pos, Quaternion.identity);
+        }
 
     }
     void Start()
     {
-        StartCoroutine(CreateArrow(5.0f));
+        //StartCoroutine(CreateArrow(5.0f));
     }
 
     // Update is called once per frame

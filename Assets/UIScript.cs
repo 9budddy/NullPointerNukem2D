@@ -26,7 +26,7 @@ public class UIScript : MonoBehaviour
     void Update()
     {
         knowledgeNeeded.text = "Least Knowledge Needed: " + gameState.minimumKnowledgeThreshold.ToString();
-        browniePoints.text = "Brownies: " + gameState.minimumKnowledgeThreshold.ToString();
+        browniePoints.text = "Brownies: " + gameState.browiePoints.ToString();
         knowledgePoints.text = "Knowledge: " + gameState.knowledgePoints.ToString();
     }
 }
