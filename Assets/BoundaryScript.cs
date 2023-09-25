@@ -19,12 +19,6 @@ public class BoundaryScript : MonoBehaviour
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     }
 
-
-    void Update()
-    {
-        
-    }
-
     public void tryCamera(GameObject obj)
     {
         

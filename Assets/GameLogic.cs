@@ -12,6 +12,8 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private TextMeshProUGUI immuneText;
     [SerializeField] private TextMeshProUGUI knowledgeDoubledText;
     [SerializeField] private TextMeshProUGUI enemiesDestroyedText;
+    [SerializeField] private TextMeshProUGUI youWinText;
+    [SerializeField] private TextMeshProUGUI youLoseText;
 
     private bool triggerHero = false;
     private bool swarm = false;
@@ -44,6 +46,8 @@ public class GameLogic : MonoBehaviour
         immuneText.enabled = false;
         knowledgeDoubledText.enabled = false;
         enemiesDestroyedText.enabled = false;
+        youWinText.enabled = false;
+        youLoseText.enabled = false;
 
         //PLAYER STATES
         playerState.immune = false;
@@ -74,12 +78,20 @@ public class GameLogic : MonoBehaviour
         {
             playerImmune();
         } 
-         
+        
+        
         //GAME END
-        /*if (gameState.knowledgePoints < gameState.maxKnowledgePoints / 4)
+        if (gameState.knowledgePoints >= 1000000)
         {
+            youWinText.enabled = true;
             Time.timeScale = 0.0f;
-        }*/
+        }
+
+        if (gameState.knowledgePoints < gameState.maxKnowledgePoints / 4)
+        {
+            youLoseText.enabled = true;
+            Time.timeScale = 0.0f;
+        }
     }
 
     private void enemyDestroy()
