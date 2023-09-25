@@ -78,10 +78,14 @@ public class PlayerScript : MonoBehaviour
         }
         else if (lastUpdate < checkUpdate && !spawnedText)
         {
-            if (transform.localScale.x == -1 )
+            if (transform.localScale.x == -1)
             {
-                doItLaterCanvas.transform.localScale = new Vector3(doItLaterCanvas.transform.localScale.x * -1, doItLaterCanvas.transform.localScale.y, doItLaterCanvas.transform.localScale.z);
-            } 
+                if (doItLaterCanvas.transform.localScale.x > 0)
+                {
+                    doItLaterCanvas.transform.localScale = new Vector3(doItLaterCanvas.transform.localScale.x * -1, doItLaterCanvas.transform.localScale.y, doItLaterCanvas.transform.localScale.z);
+
+                }
+            }
             else
             {
                 if (doItLaterCanvas.transform.localScale.x < 0)

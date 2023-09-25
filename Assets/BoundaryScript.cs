@@ -25,11 +25,11 @@ public class BoundaryScript : MonoBehaviour
         objectWidth = obj.transform.GetComponent<BoxCollider2D>().bounds.size.x;
         objectHeight = obj.transform.GetComponent<BoxCollider2D>().bounds.size.y;
         objectExtraWidth = (objectHeight / 16);
-        objectExtraHeight = (objectHeight / 16);
+        objectExtraHeight = (objectHeight / 4);
 
         Vector3 viewPos = obj.transform.position;
         viewPos.x = Mathf.Clamp(viewPos.x, screenBounds.x * -1 + (objectWidth - objectExtraWidth), screenBounds.x - (objectWidth - objectExtraWidth));
-        viewPos.y = Mathf.Clamp(viewPos.y, screenBounds.y * -1, screenBounds.y - (objectHeight - objectExtraHeight));
+        viewPos.y = Mathf.Clamp(viewPos.y, screenBounds.y * -1, screenBounds.y - (objectHeight + objectExtraHeight));
         obj.transform.position = viewPos;
     }
 }

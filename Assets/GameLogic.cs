@@ -149,8 +149,23 @@ public class GameLogic : MonoBehaviour
         }
         else if (swarm == true && lastUpdate > checkUpdate)
         {
-            lastUpdate = 0.0f;
-            gameState.knowledgePoints -= (gameState.knowledgePoints / 10);
+            if (playerState.gotPowerUp)
+            {
+                playerState.gotPowerUp = false;
+                swarm = false;
+            }
+            else
+            {
+                lastUpdate = 0.0f;
+                gameState.knowledgePoints -= (gameState.knowledgePoints / 10);
+            }
+        } 
+        else if (swarm == false)
+        {
+            if (playerState.gotPowerUp)
+            {
+                playerState.gotPowerUp = false;
+            }
         }
     }
 
@@ -191,7 +206,15 @@ public class GameLogic : MonoBehaviour
             if (tag == "GermanProfessor")
             {
                 //Destroy all enemies on screen
-                foreach (GameObject enemy in gameState.enemyObjects) 
+                foreach (GameObject enemy in gameState.enemyArrows) 
+                {
+                    Destroy(enemy);
+                }
+                foreach (GameObject enemy in gameState.enemySwarms)
+                {
+                    Destroy(enemy);
+                }
+                foreach (GameObject enemy in gameState.enemyPirates)
                 {
                     Destroy(enemy);
                 }

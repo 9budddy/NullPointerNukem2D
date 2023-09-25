@@ -162,6 +162,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7854591112645464247, guid: 1a41182d1906f76448f6ca63ecaaeea2, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 7854591112645464247, guid: 1a41182d1906f76448f6ca63ecaaeea2, type: 3}
       propertyPath: m_ForceSendLayers.m_Bits
       value: 55
       objectReference: {fileID: 0}
@@ -230,6 +234,10 @@ PrefabInstance:
     - target: {fileID: 194637430872703436, guid: 48b5c4ccab4ad4240b932ef8b646a490, type: 3}
       propertyPath: m_IsTrigger
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 194637430872703436, guid: 48b5c4ccab4ad4240b932ef8b646a490, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 194637430872703436, guid: 48b5c4ccab4ad4240b932ef8b646a490, type: 3}
       propertyPath: m_ForceSendLayers.m_Bits
