@@ -24,6 +24,7 @@ public class EnemyCreation : MonoBehaviour
     [SerializeField] private GameObject brownie;
     [SerializeField] private GameObject pendant;
 
+
     [SerializeField] private GameState gameState;
     [SerializeField] private PlayerState playerState;
 
