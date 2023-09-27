@@ -157,7 +157,16 @@ public class GameLogic : MonoBehaviour
             else
             {
                 lastUpdate = 0.0f;
-                gameState.knowledgePoints -= (gameState.knowledgePoints / 10);
+                if (gameState.knowledgePoints / 10 < 1)
+                {
+                    gameState.knowledgePoints--;
+                } 
+                else
+                {
+                    gameState.knowledgePoints -= (gameState.knowledgePoints / 10);
+                }
+                
+
             }
         } 
         else if (swarm == false)
@@ -199,7 +208,13 @@ public class GameLogic : MonoBehaviour
 
     public void HeroContact(string tag) 
     {
-        triggerHero = (gameState.browiePoints >= 10) ? true : false;
+        if (gameState.browiePoints >= 10) {
+            triggerHero = true;
+            playerState.gotPowerUp = true; 
+        }  else
+        {
+            triggerHero = false;
+        }
         gameState.browiePoints = 0;
         if (triggerHero)
         {

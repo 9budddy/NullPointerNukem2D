@@ -6,10 +6,9 @@ using UnityEngine;
 public class PlayerCollider : MonoBehaviour
 {
 
-    [SerializeField]
-    private PlayerState playerState;
-    [SerializeField]
-    private GameLogic gameLogic;
+    [SerializeField] private PlayerState playerState;
+    [SerializeField] private GameState gameState;
+    [SerializeField] private GameLogic gameLogic;
 
 
     private float lastArrowUpdate;
@@ -42,31 +41,60 @@ public class PlayerCollider : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "CookBook" ||
-            collision.gameObject.tag == "Brownie" ||
-            collision.gameObject.tag == "Pendant")
+        if (collision.gameObject.tag == "CookBook")
         {
             gameLogic.ItemContact(collision.gameObject.tag);
+            if (gameState.itemCookbooks.Count != 0)
+            {
+                gameState.itemCookbooks.RemoveAt(0);
+            }
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.tag == "Brownie")
+        {
+            gameLogic.ItemContact(collision.gameObject.tag);
+            if (gameState.itemBrownies.Count != 0)
+            {
+                gameState.itemBrownies.RemoveAt(0);
+            }
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.tag == "Pendant")
+        {
+            gameLogic.ItemContact(collision.gameObject.tag);
+            if (gameState.itemPendants.Count != 0)
+            {
+                gameState.itemPendants.RemoveAt(0);
+            }
             Destroy(collision.gameObject);
         }
 
         if (collision.gameObject.tag == "GermanProfessor")
-        {
-            playerState.gotPowerUp = true;
+        { 
             gameLogic.HeroContact(collision.gameObject.tag);
+            if (gameState.heroGermans.Count != 0)
+            {
+                gameState.heroGermans.RemoveAt(0);
+            }
             Destroy(collision.gameObject);
         }
             
         else if (collision.gameObject.tag == "EnglishEducator")
         {
-            playerState.gotPowerUp = true;
             gameLogic.HeroContact(collision.gameObject.tag);
+            if (gameState.heroEnglishs.Count != 0)
+            {
+                gameState.heroEnglishs.RemoveAt(0);
+            }
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.tag == "AmericanAmplifier")
         {
-            playerState.gotPowerUp = true;
             gameLogic.HeroContact(collision.gameObject.tag);
+            if (gameState.heroAmericans.Count != 0)
+            {
+                gameState.heroAmericans.RemoveAt(0);
+            }
             Destroy(collision.gameObject);
         }
     }

@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class ObjectCreation : MonoBehaviour
 {
     private Vector2 screenBounds;
-    private float objectWidth;
-    private float objectHeight;
-    private float objectExtraWidth;
-    private float objectExtraHeight;
+
     
     private float playerWidth;
     private float playerHeight;
@@ -31,6 +30,17 @@ public class ObjectCreation : MonoBehaviour
     [SerializeField] private GameState gameState;
     [SerializeField] private PlayerState playerState;
 
+
+    //LIMITS:
+    [SerializeField] private int arrowLimit;
+        [SerializeField] private int swarmLimit;
+        [SerializeField] private int pirateLimit;
+        [SerializeField] private int cookbookLimit;
+        [SerializeField] private int pendantLimit;
+        [SerializeField] private int brownieLimit;
+        [SerializeField] private int germanLimit;
+        [SerializeField] private int englishLimit;
+        [SerializeField] private int americanLimit;
 
     //IF (3 Enemy(singleTyped) -> Delete and put another on)
     //IF (2 Hero(singleTyped) -> Delete and put another on)
@@ -69,6 +79,16 @@ public class ObjectCreation : MonoBehaviour
 
     void Start()
     {
+        gameState.heroAmericans = new List<GameObject>();
+        gameState.heroEnglishs = new List<GameObject>();
+        gameState.heroGermans = new List<GameObject>();
+        gameState.itemBrownies = new List<GameObject>();
+        gameState.itemCookbooks = new List<GameObject>();
+        gameState.itemPendants = new List<GameObject>();
+        gameState.enemyArrows = new List<GameObject>();
+        gameState.enemyPirates = new List<GameObject>();
+        gameState.enemySwarms = new List<GameObject>();
+
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         StartCoroutine(CreateAmerican(minVeryRareCreate, maxVeryRareCreate));
         StartCoroutine(CreateArrow(minRareCreate, maxRareCreate));
@@ -83,12 +103,17 @@ public class ObjectCreation : MonoBehaviour
 
     private Vector3 WithinScreen(GameObject obj, GameObject obj2, string type)
     {
+        float objectWidth;
+        float objectHeight;
+        float objectExtraWidth;
+        float objectExtraHeight;
         if (type == "poly")
         {
             objectHeight = obj2.transform.GetComponent<BoxCollider2D>().size.y;
         }
-        else if (type == "box")
+        else 
         {
+            // type == "box"
             objectHeight = obj.transform.GetComponent<BoxCollider2D>().size.y;
         }
         objectWidth = obj.transform.GetComponent<BoxCollider2D>().size.x;
@@ -99,26 +124,42 @@ public class ObjectCreation : MonoBehaviour
         playerWidth = player.transform.GetComponent<BoxCollider2D>().size.x;
         playerHeight = player.transform.GetComponent<BoxCollider2D>().size.y;
 
-        Vector3 viewPos = obj.transform.position;
-        viewPos.x = UnityEngine.Random.Range(screenBounds.x * -1 + (objectWidth - objectExtraWidth), screenBounds.x - (objectWidth - objectExtraWidth));
-        viewPos.y = UnityEngine.Random.Range(screenBounds.y * -1, screenBounds.y - (objectHeight - objectExtraHeight));
+        Vector3 viewPos = new Vector3();
+        viewPos = getViewPos(objectWidth, objectExtraWidth, objectHeight, objectExtraHeight);
 
 
         //if (viewPos.x < transform.position.x + objectWidth * 2 && viewPos.x > transform.position.x - objectWidth * 2) ; // It is within x... respawn &&
         //if (viewPos.y < transform.position.y + objectHeight * 2 && viewPos.y > transform.position.y - objectHeight * 2) ; // It is within y... respawn ||
         //if (viewPos.x > screenBounds.x || viewPos.y > screenBounds.y || viewPos.x < -screenBounds.x || viewPos.y < -screenBounds.y) // It is out of bounds...respawn
-        while ((viewPos.x < playerState.position.x + playerWidth * 2 && viewPos.x > playerState.position.x - playerWidth * 2) &&
-            (viewPos.y < playerState.position.y + playerHeight * 2 && viewPos.y > playerState.position.y - playerHeight * 2) &&
-            (viewPos.x < playerState.position.x + objectWidth * 2 && viewPos.x > playerState.position.x - objectWidth * 2) &&
-            (viewPos.y < playerState.position.y + objectHeight * 2 && viewPos.y > playerState.position.y - objectHeight * 2) ||
-            (viewPos.x > screenBounds.x || viewPos.y > screenBounds.y || viewPos.x < -screenBounds.x || viewPos.y < -screenBounds.y))
+
+        bool goodToGo = false;
+        while(!goodToGo)
         {
-            viewPos.x = UnityEngine.Random.Range(screenBounds.x * -1 + (objectWidth - objectExtraWidth), screenBounds.x - (objectWidth - objectExtraWidth));
-            viewPos.y = UnityEngine.Random.Range(screenBounds.y * -1, screenBounds.y - (objectHeight - objectExtraHeight));
+            if ((viewPos.x > playerState.position.x - playerWidth * 2 && viewPos.x < playerState.position.x + playerWidth * 2) ||
+                (viewPos.x > playerState.position.x - objectWidth * 2 && viewPos.x < playerState.position.x + objectWidth * 2) ||
+                (viewPos.y > playerState.position.y - playerHeight * 2 && viewPos.y < playerState.position.y + playerHeight * 2) ||
+                (viewPos.y > playerState.position.y - objectHeight * 2 && viewPos.y < playerState.position.y + objectHeight * 2) ||
+                (viewPos.x > screenBounds.x || viewPos.y > screenBounds.y || viewPos.x < -screenBounds.x || viewPos.y < -screenBounds.y))
+            {
+                viewPos = getViewPos(objectWidth, objectExtraWidth, objectHeight, objectExtraHeight);
+                continue;
+            } else
+            {
+                goodToGo = true;
+            }
         }
+        return viewPos;
+    }
+
+    private Vector3 getViewPos(float objectWidth, float objectExtraWidth, float objectHeight, float objectExtraHeight)
+    {
+        Vector3 viewPos = new Vector3();
+        viewPos.x = UnityEngine.Random.Range(screenBounds.x * -1 + (objectWidth - objectExtraWidth), screenBounds.x - (objectWidth - objectExtraWidth));
+        viewPos.y = UnityEngine.Random.Range(screenBounds.y * -1 + (objectHeight - objectExtraHeight), screenBounds.y - (objectHeight - objectExtraHeight));
 
         return viewPos;
     }
+
 
     //VERY RARE: --------------------------------------------
 
@@ -128,19 +169,28 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(american, null, "box");
-            GameObject obj = Instantiate(american, pos, Quaternion.identity);
-
-            StartCoroutine(DeleteAmerican(minVeryRareDelete, maxVeryRareDelete, obj));
+            
+            if (gameState.heroAmericans.Count < americanLimit)
+            {
+                Vector3 pos = WithinScreen(american, null, "box");
+                GameObject obj = Instantiate(american, pos, Quaternion.identity);
+                gameState.heroAmericans.Add(obj);
+                StartCoroutine(DeleteAmerican(minVeryRareDelete, maxVeryRareDelete, obj));
+            }
         }
     }
     IEnumerator DeleteAmerican(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
-        yield return new WaitForSeconds(waitTime);        
-        if (obj != null)
+        yield return new WaitForSeconds(waitTime);
+
+        if (gameState.heroAmericans.Count != 0)
         {
-            Destroy(obj);
+            gameState.heroAmericans.RemoveAt(0);
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
         }
     }
 
@@ -151,22 +201,26 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(arrowWidth, arrowHeight, "poly");
-            GameObject enemy = Instantiate(arrow, pos, Quaternion.identity);
-            gameState.enemyArrows.Add(enemy);
-            StartCoroutine(DeleteArrow(minRareDelete, maxRareDelete, enemy));
+
+            if (gameState.enemyArrows.Count < arrowLimit)
+            {
+                Vector3 pos = WithinScreen(arrowWidth, arrowHeight, "poly");
+                GameObject obj = Instantiate(arrow, pos, Quaternion.identity);
+                gameState.enemyArrows.Add(obj);
+                StartCoroutine(DeleteArrow(minRareDelete, maxRareDelete, obj));
+            }
         }
     }
-    IEnumerator DeleteArrow(float minTime, float maxTime, GameObject enemy)
+    IEnumerator DeleteArrow(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
         if (gameState.enemyArrows.Count != 0)
         {
             gameState.enemyArrows.RemoveAt(0);
-            if (enemy != null)
+            if (obj != null)
             {
-                Destroy(enemy);
+                Destroy(obj);
             }
         }
     }
@@ -177,19 +231,28 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(english, null, "box");
-            GameObject obj = Instantiate(english, pos, Quaternion.identity);
 
-            StartCoroutine(DeleteEnglish(minRareHeroDelete, maxRareHeroDelete, obj));
+            if (gameState.heroEnglishs.Count < englishLimit)
+            {
+                Vector3 pos = WithinScreen(english, null, "box");
+                GameObject obj = Instantiate(english, pos, Quaternion.identity);
+                gameState.heroEnglishs.Add(obj);
+                StartCoroutine(DeleteEnglish(minRareHeroDelete, maxRareHeroDelete, obj));
+            }
         }
     }
     IEnumerator DeleteEnglish(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
-        if (obj != null)
+
+        if (gameState.heroEnglishs.Count != 0)
         {
-            Destroy(obj);
+            gameState.heroEnglishs.RemoveAt(0);
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
         }
     }
 
@@ -199,19 +262,28 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(german, null, "box");
-            GameObject obj = Instantiate(german, pos, Quaternion.identity);
 
-            StartCoroutine(DeleteGerman(minRareHeroDelete, maxRareHeroDelete, obj));
+            if (gameState.heroGermans.Count < germanLimit)
+            {
+                Vector3 pos = WithinScreen(german, null, "box");
+                GameObject obj = Instantiate(german, pos, Quaternion.identity);
+                gameState.heroGermans.Add(obj);
+                StartCoroutine(DeleteGerman(minRareHeroDelete, maxRareHeroDelete, obj));
+            }
         }
     }
+
     IEnumerator DeleteGerman(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
-        if (obj != null)
+        if (gameState.heroGermans.Count != 0)
         {
-            Destroy(obj);
+            gameState.heroGermans.RemoveAt(0);
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
         }
     }
 
@@ -224,22 +296,27 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(swarm, null, "box");
-            GameObject enemy = Instantiate(swarm, pos, Quaternion.identity);
-            gameState.enemySwarms.Add(enemy);
-            StartCoroutine(DeleteSwarm(minMediumDelete, maxMediumDelete, enemy));
+
+            if (gameState.enemySwarms.Count < swarmLimit)
+            {
+                Vector3 pos = WithinScreen(swarm, null, "box");
+                GameObject obj = Instantiate(swarm, pos, Quaternion.identity);
+                gameState.enemySwarms.Add(obj);
+                StartCoroutine(DeleteSwarm(minMediumDelete, maxMediumDelete, obj));
+            }
         }
     }
-    IEnumerator DeleteSwarm(float minTime, float maxTime, GameObject enemy)
+
+    IEnumerator DeleteSwarm(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
         if (gameState.enemySwarms.Count != 0)
         {
             gameState.enemySwarms.RemoveAt(0);
-            if (enemy != null)
+            if (obj != null)
             {
-                Destroy(enemy);
+                Destroy(obj);
             }
         }
     }
@@ -250,22 +327,25 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(pirate, null, "box");
-            GameObject enemy = Instantiate(pirate, pos, Quaternion.identity);
-            gameState.enemyPirates.Add(enemy);
-            StartCoroutine(DeletePirate(minMediumDelete, maxMediumDelete, enemy));
+            if (gameState.enemyPirates.Count < pirateLimit)
+            {
+                Vector3 pos = WithinScreen(pirate, null, "box");
+                GameObject enemy = Instantiate(pirate, pos, Quaternion.identity);
+                gameState.enemyPirates.Add(enemy);
+                StartCoroutine(DeletePirate(minMediumDelete, maxMediumDelete, enemy));
+            }
         }
     }
-    IEnumerator DeletePirate(float minTime, float maxTime, GameObject enemy)
+    IEnumerator DeletePirate(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
         if (gameState.enemyPirates.Count != 0)
         {
             gameState.enemyPirates.RemoveAt(0);
-            if (enemy != null)
+            if (obj != null)
             {
-                Destroy(enemy);
+                Destroy(obj);
             }
         }
     }
@@ -279,19 +359,26 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(brownie, null, "box");
-            GameObject obj = Instantiate(brownie, pos, Quaternion.identity);
-
-            StartCoroutine(DeleteBrownie(minOftenDelete, maxOftenDelete, obj));
+            if (gameState.itemBrownies.Count < brownieLimit)
+            {
+                Vector3 pos = WithinScreen(brownie, null, "box");
+                GameObject obj = Instantiate(brownie, pos, Quaternion.identity);
+                gameState.itemBrownies.Add(obj);
+                StartCoroutine(DeleteBrownie(minOftenDelete, maxOftenDelete, obj));
+            }
         }
     }
     IEnumerator DeleteBrownie(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
-        if (obj != null)
+        if (gameState.itemBrownies.Count != 0)
         {
-            Destroy(obj);
+            gameState.itemBrownies.RemoveAt(0);
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
         }
     }
 
@@ -301,19 +388,26 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(pendant, null, "box");
-            GameObject obj = Instantiate(pendant, pos, Quaternion.identity);
-
-            StartCoroutine(DeletePendant(minOftenDelete, maxOftenDelete, obj));
+            if (gameState.itemPendants.Count < pendantLimit)
+            {
+                Vector3 pos = WithinScreen(pendant, null, "box");
+                GameObject obj = Instantiate(pendant, pos, Quaternion.identity);
+                gameState.itemPendants.Add(obj);
+                StartCoroutine(DeletePendant(minOftenDelete, maxOftenDelete, obj));
+            }
         }
     }
     IEnumerator DeletePendant(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
-        if (obj != null)
+        if (gameState.itemPendants.Count != 0)
         {
-            Destroy(obj);
+            gameState.itemPendants.RemoveAt(0);
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
         }
     }
 
@@ -325,19 +419,26 @@ public class ObjectCreation : MonoBehaviour
         {
             float waitTime = UnityEngine.Random.Range(minTime, maxTime);
             yield return new WaitForSeconds(waitTime);
-            Vector3 pos = WithinScreen(cookbook, null, "box");
-            GameObject obj = Instantiate(cookbook, pos, Quaternion.identity);
-
-            StartCoroutine(DeleteCookbook(minVeryOftenDelete, maxVeryOftenDelete, obj));
+            if (gameState.itemCookbooks.Count < cookbookLimit)
+            {
+                Vector3 pos = WithinScreen(cookbook, null, "box");
+                GameObject obj = Instantiate(cookbook, pos, Quaternion.identity);
+                gameState.itemCookbooks.Add(obj);
+                StartCoroutine(DeleteCookbook(minVeryOftenDelete, maxVeryOftenDelete, obj));
+            }
         }
     }
     IEnumerator DeleteCookbook(float minTime, float maxTime, GameObject obj)
     {
         float waitTime = UnityEngine.Random.Range(minTime, maxTime);
         yield return new WaitForSeconds(waitTime);
-        if (obj != null)
+        if (gameState.itemCookbooks.Count != 0)
         {
-            Destroy(obj);
+            gameState.itemCookbooks.RemoveAt(0);
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
         }
     }
 }
