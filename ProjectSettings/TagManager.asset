@@ -4,10 +4,15 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - LeftBox
-  - RightBox
-  - TopBox
-  - BottomBox
+  - Arrow
+  - EnglishEducator
+  - AmericanAmplifier
+  - GermanProfessor
+  - Swarm
+  - Pirate
+  - Brownie
+  - CookBook
+  - Pendant
   layers:
   - Default
   - TransparentFX
@@ -15,10 +20,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Heroes
+  - Enemies
+  - Items
   - 
   - 
   - 
@@ -44,4 +49,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Top
+    uniqueID: 1311609665
     locked: 0
