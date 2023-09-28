@@ -39,7 +39,7 @@ public class GameLogic : MonoBehaviour
         //GAMESTATE ITEMS
         gameState.knowledgePoints = 20;
         gameState.maxKnowledgePoints = 20;
-        gameState.browiePoints = 5;
+        gameState.browiePoints = 0;
         gameState.minimumKnowledgeThreshold = 5;
 
         //TEXT STATES
